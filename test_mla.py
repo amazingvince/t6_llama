@@ -4,14 +4,8 @@ from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
 from typing import Optional, Dict, Any
 import torch
 
-from mla_model.configuration_qwen2_mla import Qwen2MLAConfig
-from mla_model.modeling_qwen2_mla import Qwen2ForCausalLM
-
-
-
-
-AutoConfig.register("qwen2mla", Qwen2MLAConfig)
-AutoModelForCausalLM.register(Qwen2MLAConfig, Qwen2ForCausalLM)
+AutoConfig.register("qwen2t6", Qwen2T6Config)
+AutoModelForCausalLM.register(Qwen2T6Config, Qwen2ForCausalLM)
 
 def load_and_prepare_qwen2t6_model(
     pretrained_model_name: str,
@@ -52,7 +46,7 @@ def load_and_prepare_qwen2t6_model(
     # Initialize custom model
     custom_model = AutoModelForCausalLM.from_config(t6_config,  
                                     torch_dtype=torch.bfloat16,      
-                                        attn_implementation="sdpa").to('cuda:0')
+                                        attn_implementation="flash_attention_2").to('cuda:0')
                                         # attn_implementation="sdpa")
     
     # Transfer weights from pretrained to custom model
